@@ -229,11 +229,11 @@ const firebaseConfig = {
     }
 
     function copiarDatos(id) {
-      firebase.database().ref("pacientes/" + id).once("value").then(snapshot => {
-        const p = snapshot.val();
-        if (!p) return;
+  firebase.database().ref("pacientes/" + id).once("value").then(snapshot => {
+    const p = snapshot.val();
+    if (!p) return;
 
-        const texto = `
+    const texto = `
 Nombre: ${p.nombre}
 Edad: ${p.edad}
 Diagnóstico: ${p.diagnostico}
@@ -247,17 +247,17 @@ Doxorubicina: ${p.dosis.doxorubicina} mg
 Vincristina: ${p.dosis.vincristina} mg
 Prednisona: ${p.dosis.prednisona} mg/día por 5 días`;
 
-        navigator.clipboard.writeText(texto).then(() => {
-          alert("Datos del paciente copiados al portapapeles.");
-        });
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(texto).then(() => {
+        alert("Datos copiados al portapapeles.");
+      }).catch(() => {
+        alert("No se pudo copiar automáticamente. Copia estos datos manualmente:\n\n" + texto);
       });
+    } else {
+      alert("Tu navegador no permite copiar automáticamente.\nCopia estos datos manualmente:\n\n" + texto);
     }
-
-    function eliminarPaciente(id) {
-      firebase.database().ref("pacientes/" + id).remove().then(() => {
-        mostrarHistorial();
-      });
-    }
+  });
+}
 
     function filtrarHistorial() {
       const filtro = document.getElementById("busqueda").value;
@@ -269,4 +269,6 @@ Prednisona: ${p.dosis.prednisona} mg/día por 5 días`;
   </script>
 </body>
 </html>
+
+
 
