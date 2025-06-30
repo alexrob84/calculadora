@@ -4,12 +4,16 @@
   <meta charset="UTF-8">
   <title>Calculadora R-CHOP</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="styles.css">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Enlaces para PWA -->
   <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#007bff">
+
+  <!-- Hoja de estilos -->
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-
+ 
   <h2>Calculadora de Dosis R-CHOP</h2>
 
   <div id="mensaje-edicion" class="mensaje-edicion" style="display: none;">
@@ -45,6 +49,20 @@
   <!-- Firebase SDK -->
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
+
+  <!-- Script principal -->
   <script src="script.js"></script>
+
+  <!-- Registro del service worker para PWA -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./service-worker.js')
+          .then(reg => console.log("✅ Service Worker registrado"))
+          .catch(err => console.error("❌ Error al registrar Service Worker:", err));
+      });
+    }
+  </script>
 </body>
 </html>
+
