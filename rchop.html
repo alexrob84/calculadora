@@ -11,7 +11,15 @@
       padding: 10px;
       max-width: 100%;
     }
+<script>
+  const contraseñaCorrecta = "tuclave123"; // Puedes cambiar esto
 
+  const clave = prompt("Introduce la contraseña para acceder:");
+  if (clave !== contraseñaCorrecta) {
+    document.body.innerHTML = "<h2 style='color:red'>Acceso denegado</h2>";
+    throw new Error("Contraseña incorrecta");
+  }
+</script>
     input, textarea, button {
       width: 100%;
       padding: 10px;
