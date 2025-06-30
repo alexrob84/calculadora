@@ -34,11 +34,11 @@
   <br><br>
   <div id="historial"></div>
 
-  <!-- Firebase -->
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
   <script>
- const firebaseConfig = {
+    // Pega aquí tu configuración de Firebase
+const firebaseConfig = {
     apiKey: "AIzaSyCdd4y_IiKG8qQ2xFeFcBVBcB8BZVEeaPA",
     authDomain: "calculadora-r-chop.firebaseapp.com",
     databaseURL: "https://calculadora-r-chop-default-rtdb.firebaseio.com",
@@ -86,53 +86,48 @@
         </ul>`;
     }
 
-function guardarPaciente() {
-  const nombre = document.getElementById('nombre').value.trim();
-  const edad = document.getElementById('edad').value.trim();
-  const diagnostico = document.getElementById('diagnostico').value.trim();
-  const comentarios = document.getElementById('comentarios').value.trim();
-  const peso = parseFloat(document.getElementById('peso').value);
-  const estatura = parseFloat(document.getElementById('estatura').value);
-  if (!nombre || !edad || !diagnostico || !peso || !estatura) {
-    alert("Completa todos los campos requeridos.");
-    return;
-  }
+    function guardarPaciente() {
+      const nombre = document.getElementById('nombre').value.trim();
+      const edad = document.getElementById('edad').value.trim();
+      const diagnostico = document.getElementById('diagnostico').value.trim();
+      const comentarios = document.getElementById('comentarios').value.trim();
+      const peso = parseFloat(document.getElementById('peso').value);
+      const estatura = parseFloat(document.getElementById('estatura').value);
+      if (!nombre || !edad || !diagnostico || !peso || !estatura) {
+        alert("Completa todos los campos requeridos.");
+        return;
+      }
 
-  const bsa = 0.007184 * Math.pow(peso, 0.425) * Math.pow(estatura, 0.725);
-  bsaGlobal = bsa.toFixed(2);
-  const dosis = {
-    rituximab: (375 * bsa).toFixed(1),
-    ciclofosfamida: (750 * bsa).toFixed(1),
-    doxorubicina: (50 * bsa).toFixed(1),
-    vincristina: (Math.min(1.4 * bsa, 2)).toFixed(1),
-    prednisona: 50
-  };
+      const bsa = 0.007184 * Math.pow(peso, 0.425) * Math.pow(estatura, 0.725);
+      bsaGlobal = bsa.toFixed(2);
+      const dosis = {
+        rituximab: (375 * bsa).toFixed(1),
+        ciclofosfamida: (750 * bsa).toFixed(1),
+        doxorubicina: (50 * bsa).toFixed(1),
+        vincristina: (Math.min(1.4 * bsa, 2)).toFixed(1),
+        prednisona: 50
+      };
 
-  const paciente = {
-    id: Date.now(),
-    nombre,
-    edad,
-    diagnostico,
-    comentarios,
-    peso,
-    estatura,
-    bsa: bsaGlobal,
-    timestamp: new Date().toLocaleDateString(),
-    dosis
-  };
+      const paciente = {
+        id: Date.now(),
+        nombre,
+        edad,
+        diagnostico,
+        comentarios,
+        peso,
+        estatura,
+        bsa: bsaGlobal,
+        timestamp: new Date().toLocaleDateString(),
+        dosis
+      };
 
-  db.ref("pacientes/" + paciente.id).set(paciente).then(() => {
-    mostrarHistorial(document.getElementById("busqueda").value);
-  });
-}
-
+      db.ref("pacientes/" + paciente.id).set(paciente).then(() => {
+        mostrarHistorial(document.getElementById("busqueda").value);
+      });
+    }
 
     function mostrarHistorial(filtro = "") {
-      db.ref("pacientes").once("value", snapshot => {
-        const historial = [];
-        snapshot.forEach(child => historial.push(child.val()));
-
-        filtro = filtro.toLowerCase();
+      firebase.database().ref("pacientes").once("value").then(snapshot => {
         let html = `<table><tr>
           <th>Fecha</th><th>Nombre</th><th>Edad</th><th>Diagnóstico</th>
           <th>Peso</th><th>Estatura</th><th>BSA</th><th>Comentarios</th>
@@ -140,29 +135,35 @@ function guardarPaciente() {
           <th>Vincristina</th><th>Prednisona</th><th>Acciones</th>
         </tr>`;
 
-        historial
-          .filter(p => p.nombre && p.nombre.toLowerCase().includes(filtro))
-          .forEach(p => {
+        snapshot.forEach(child => {
+          try {
+            const p = child.val();
+            const nombre = p.nombre?.toLowerCase() || "";
+            if (filtro && !nombre.includes(filtro.toLowerCase())) return;
+
             html += `<tr data-id="${p.id}">
-              <td>${p.timestamp}</td>
-              ${celda("nombre", p.nombre)}
-              ${celda("edad", p.edad)}
-              ${celda("diagnostico", p.diagnostico)}
-              ${celda("peso", p.peso)}
-              ${celda("estatura", p.estatura)}
-              <td>${p.bsa}</td>
-              ${celda("comentarios", p.comentarios)}
-              <td>${p.dosis.rituximab}</td>
-              <td>${p.dosis.ciclofosfamida}</td>
-              <td>${p.dosis.doxorubicina}</td>
-              <td>${p.dosis.vincristina}</td>
-              <td>${p.dosis.prednisona}</td>
+              <td>${p.timestamp || ""}</td>
+              ${celda("nombre", p.nombre || "")}
+              ${celda("edad", p.edad || "")}
+              ${celda("diagnostico", p.diagnostico || "")}
+              ${celda("peso", p.peso || "")}
+              ${celda("estatura", p.estatura || "")}
+              <td>${p.bsa || ""}</td>
+              ${celda("comentarios", p.comentarios || "")}
+              <td>${p.dosis?.rituximab || ""}</td>
+              <td>${p.dosis?.ciclofosfamida || ""}</td>
+              <td>${p.dosis?.doxorubicina || ""}</td>
+              <td>${p.dosis?.vincristina || ""}</td>
+              <td>${p.dosis?.prednisona || ""}</td>
               <td>
                 <button onclick="copiarDatos(${p.id})">Copiar</button>
                 <button onclick="eliminarPaciente(${p.id})">Eliminar</button>
               </td>
             </tr>`;
-          });
+          } catch (error) {
+            console.error("Error procesando paciente:", error);
+          }
+        });
 
         html += "</table>";
         document.getElementById("historial").innerHTML = html;
@@ -185,7 +186,9 @@ function guardarPaciente() {
           td.appendChild(input);
           input.focus();
           input.onblur = () => guardarCelda(td, input.value);
-          input.onkeydown = e => { if (e.key === "Enter") input.blur(); };
+          input.onkeydown = e => {
+            if (e.key === "Enter") input.blur();
+          };
         };
       });
     }
@@ -245,7 +248,7 @@ Vincristina: ${p.dosis.vincristina} mg
 Prednisona: ${p.dosis.prednisona} mg/día por 5 días`;
 
         navigator.clipboard.writeText(texto).then(() => {
-          alert("Datos copiados al portapapeles.");
+          alert("Datos del paciente copiados al portapapeles.");
         });
       });
     }
@@ -261,8 +264,9 @@ Prednisona: ${p.dosis.prednisona} mg/día por 5 días`;
       mostrarHistorial(filtro);
     }
 
-    // Carga inicial
+    // Mostrar historial al cargar la página
     mostrarHistorial();
   </script>
 </body>
 </html>
+
