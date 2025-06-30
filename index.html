@@ -99,7 +99,7 @@ const firebaseConfig = {
       }
 
       const bsa = 0.007184 * Math.pow(peso, 0.425) * Math.pow(estatura, 0.725);
-      bsaGlobal = bsa.toFixed(2);
+      const bsaFixed = bsa.toFixed(2);
       const dosis = {
         rituximab: (375 * bsa).toFixed(1),
         ciclofosfamida: (750 * bsa).toFixed(1),
@@ -116,7 +116,7 @@ const firebaseConfig = {
         comentarios,
         peso,
         estatura,
-        bsa: bsaGlobal,
+        bsa: bsaFixed,
         timestamp: new Date().toLocaleDateString(),
         dosis
       };
@@ -127,7 +127,7 @@ const firebaseConfig = {
     }
 
     function mostrarHistorial(filtro = "") {
-      firebase.database().ref("pacientes").once("value").then(snapshot => {
+      db.ref("pacientes").once("value").then(snapshot => {
         let html = `<table><tr>
           <th>Fecha</th><th>Nombre</th><th>Edad</th><th>Diagnóstico</th>
           <th>Peso</th><th>Estatura</th><th>BSA</th><th>Comentarios</th>
@@ -136,33 +136,28 @@ const firebaseConfig = {
         </tr>`;
 
         snapshot.forEach(child => {
-          try {
-            const p = child.val();
-            const nombre = p.nombre?.toLowerCase() || "";
-            if (filtro && !nombre.includes(filtro.toLowerCase())) return;
+          const p = child.val();
+          if (!p.nombre || (filtro && !p.nombre.toLowerCase().includes(filtro.toLowerCase()))) return;
 
-            html += `<tr data-id="${p.id}">
-              <td>${p.timestamp || ""}</td>
-              ${celda("nombre", p.nombre || "")}
-              ${celda("edad", p.edad || "")}
-              ${celda("diagnostico", p.diagnostico || "")}
-              ${celda("peso", p.peso || "")}
-              ${celda("estatura", p.estatura || "")}
-              <td>${p.bsa || ""}</td>
-              ${celda("comentarios", p.comentarios || "")}
-              <td>${p.dosis?.rituximab || ""}</td>
-              <td>${p.dosis?.ciclofosfamida || ""}</td>
-              <td>${p.dosis?.doxorubicina || ""}</td>
-              <td>${p.dosis?.vincristina || ""}</td>
-              <td>${p.dosis?.prednisona || ""}</td>
-              <td>
-                <button onclick="copiarDatos(${p.id})">Copiar</button>
-                <button onclick="eliminarPaciente(${p.id})">Eliminar</button>
-              </td>
-            </tr>`;
-          } catch (error) {
-            console.error("Error procesando paciente:", error);
-          }
+          html += `<tr data-id="${p.id}">
+            <td>${p.timestamp || ""}</td>
+            ${celda("nombre", p.nombre || "")}
+            ${celda("edad", p.edad || "")}
+            ${celda("diagnostico", p.diagnostico || "")}
+            ${celda("peso", p.peso || "")}
+            ${celda("estatura", p.estatura || "")}
+            <td>${p.bsa || ""}</td>
+            ${celda("comentarios", p.comentarios || "")}
+            <td>${p.dosis?.rituximab || ""}</td>
+            <td>${p.dosis?.ciclofosfamida || ""}</td>
+            <td>${p.dosis?.doxorubicina || ""}</td>
+            <td>${p.dosis?.vincristina || ""}</td>
+            <td>${p.dosis?.prednisona || ""}</td>
+            <td>
+              <button onclick="copiarDatos(${p.id})">Copiar</button>
+              <button onclick="eliminarPaciente(${p.id})">Eliminar</button>
+            </td>
+          </tr>`;
         });
 
         html += "</table>";
@@ -186,9 +181,7 @@ const firebaseConfig = {
           td.appendChild(input);
           input.focus();
           input.onblur = () => guardarCelda(td, input.value);
-          input.onkeydown = e => {
-            if (e.key === "Enter") input.blur();
-          };
+          input.onkeydown = e => { if (e.key === "Enter") input.blur(); };
         };
       });
     }
@@ -200,7 +193,7 @@ const firebaseConfig = {
 
       firebase.database().ref("pacientes/" + id).once("value").then(snapshot => {
         const paciente = snapshot.val();
-        if (!paciente || !(campo in paciente)) return;
+        if (!paciente || !(campo in paciente || ["peso", "estatura", "comentarios", "nombre", "edad", "diagnostico"].includes(campo))) return;
 
         paciente[campo] = ["peso", "estatura"].includes(campo)
           ? parseFloat(nuevoValor)
@@ -229,11 +222,11 @@ const firebaseConfig = {
     }
 
     function copiarDatos(id) {
-  firebase.database().ref("pacientes/" + id).once("value").then(snapshot => {
-    const p = snapshot.val();
-    if (!p) return;
+      firebase.database().ref("pacientes/" + id).once("value").then(snapshot => {
+        const p = snapshot.val();
+        if (!p) return;
 
-    const texto = `
+        const texto = `
 Nombre: ${p.nombre}
 Edad: ${p.edad}
 Diagnóstico: ${p.diagnostico}
@@ -247,28 +240,34 @@ Doxorubicina: ${p.dosis.doxorubicina} mg
 Vincristina: ${p.dosis.vincristina} mg
 Prednisona: ${p.dosis.prednisona} mg/día por 5 días`;
 
-    if (navigator.clipboard && navigator.clipboard.writeText) {
-      navigator.clipboard.writeText(texto).then(() => {
-        alert("Datos copiados al portapapeles.");
-      }).catch(() => {
-        alert("No se pudo copiar automáticamente. Copia estos datos manualmente:\n\n" + texto);
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(texto).then(() => {
+            alert("Datos copiados al portapapeles.");
+          }).catch(() => {
+            alert("No se pudo copiar automáticamente. Copia manualmente:\n\n" + texto);
+          });
+        } else {
+          alert("Tu navegador no permite copiar automático. Copia manualmente:\n\n" + texto);
+        }
       });
-    } else {
-      alert("Tu navegador no permite copiar automáticamente.\nCopia estos datos manualmente:\n\n" + texto);
     }
-  });
-}
+
+    function eliminarPaciente(id) {
+      firebase.database().ref("pacientes/" + id).remove().then(() => {
+        mostrarHistorial(document.getElementById("busqueda").value);
+      });
+    }
 
     function filtrarHistorial() {
       const filtro = document.getElementById("busqueda").value;
       mostrarHistorial(filtro);
     }
 
-    // Mostrar historial al cargar la página
+    // Carga inicial
     mostrarHistorial();
   </script>
 </body>
 </html>
-
-
-
+    
+    
+    
