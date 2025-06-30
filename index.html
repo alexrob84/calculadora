@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Calculadora R-CHOP</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <h2>Calculadora de Dosis R-CHOP</h2>
+
+  <div id="mensaje-edicion" class="mensaje-edicion" style="display: none;">
+    Editando datos del paciente: <span id="nombre-edicion"></span>
+  </div>
+
+  <form id="formulario">
+    <label>Nombre: <input type="text" id="nombre" /></label><br>
+    <label>Edad: <input type="number" id="edad" /></label><br>
+    <label>Teléfono: <input type="text" id="telefono" /></label><br>
+    <label>Diagnóstico: <input type="text" id="diagnostico" /></label><br>
+    <label>Comentarios:<br>
+      <textarea id="comentarios" rows="3" cols="40"></textarea>
+    </label><br>
+    <label>Peso (kg): <input type="number" id="peso" /></label><br>
+    <label>Estatura (cm): <input type="number" id="estatura" /></label><br>
+
+    <button type="button" onclick="calcularDosis()">Calcular</button>
+    <button type="button" id="btnGuardar" onclick="guardarPaciente()">Guardar en historial</button>
+  </form>
+
+  <div id="resultado"></div>
+
+  <h3>Historial de pacientes</h3>
+  <label>Buscar: <input type="text" id="busqueda" oninput="filtrarHistorial()" /></label>
+  <div id="historial"></div>
+
+  <div id="modal">
+    <button onclick="cerrarModal()" style="float:right;">Cerrar</button>
+    <div id="modalContenido"></div>
+  </div>
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
