@@ -3,27 +3,100 @@
 <head>
   <meta charset="UTF-8" />
   <title>Calculadora R-CHOP con Firebase</title>
-  <style>
-   body {
-  font-family: sans-serif;
-  font-size: 18px;
-}
-    td.editable:hover { background-color: #e3f2fd; cursor: pointer; }
-    td input { width: 95%; }
-    table { border-collapse: collapse; width: 100%; max-width: 1000px; }
-    th, td { padding: 6px 10px; border: 1px solid #ccc; text-align: left; }
-    input, textarea, button { margin-bottom: 5px; }
-    button {
+<style>
+  body {
+    font-family: sans-serif;
+    font-size: 18px;
+    padding: 10px;
+    max-width: 100%;
+  }
+
+  input, textarea, button {
+    width: 100%;
+    padding: 10px;
+    font-size: 18px;
+    margin: 5px 0;
+    box-sizing: border-box;
+  }
+
+  button {
     background-color: #007bff;
     color: white;
     border: none;
-    border-radius: 8px;
+    border-radius: 4px;
   }
 
   button:hover {
     background-color: #0056b3;
   }
-  </style>
+
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    font-size: 16px;
+    margin-top: 10px;
+  }
+
+  th, td {
+    padding: 8px 10px;
+    border: 1px solid #ccc;
+    text-align: left;
+    word-break: break-word;
+  }
+
+  td.editable:hover {
+    background-color: #e3f2fd;
+    cursor: pointer;
+  }
+
+  td input {
+    width: 100%;
+    font-size: 16px;
+    padding: 4px;
+  }
+
+  @media (max-width: 600px) {
+    table, thead, tbody, th, td, tr {
+      display: block;
+    }
+
+    tr {
+      margin-bottom: 1em;
+      border-bottom: 2px solid #ccc;
+    }
+
+    td {
+      border: none;
+      position: relative;
+      padding-left: 50%;
+    }
+
+    td::before {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 45%;
+      padding-left: 10px;
+      font-weight: bold;
+      white-space: nowrap;
+    }
+
+    td:nth-of-type(1)::before { content: "Fecha"; }
+    td:nth-of-type(2)::before { content: "Nombre"; }
+    td:nth-of-type(3)::before { content: "Edad"; }
+    td:nth-of-type(4)::before { content: "Diagnóstico"; }
+    td:nth-of-type(5)::before { content: "Peso"; }
+    td:nth-of-type(6)::before { content: "Estatura"; }
+    td:nth-of-type(7)::before { content: "BSA"; }
+    td:nth-of-type(8)::before { content: "Comentarios"; }
+    td:nth-of-type(9)::before { content: "Rituximab"; }
+    td:nth-of-type(10)::before { content: "Ciclofosf."; }
+    td:nth-of-type(11)::before { content: "Doxorub."; }
+    td:nth-of-type(12)::before { content: "Vincristina"; }
+    td:nth-of-type(13)::before { content: "Prednisona"; }
+    td:nth-of-type(14)::before { content: "Acciones"; }
+  }
+</style>
 </head>
 <body>
   <h2>Calculadora de Dosis R-CHOP</h2>
