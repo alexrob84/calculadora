@@ -165,6 +165,8 @@ function mostrarDetalles(id) {
       <p><strong>Vincristina:</strong> ${p.dosis?.vincristina} mg</p>
       <p><strong>Prednisona:</strong> ${p.dosis?.prednisona} mg/día por 5 días</p>
     `;
+    const mensaje = `Paciente: ${nombre}\nEdad: ${edad}\nDosis R-CHOP: ${dosis}\nObservaciones: ${notas}`;
+    const enlace = `https://wa.me/?text=${encodeURIComponent(mensaje)}`;
 
     document.getElementById("modalContenido").innerHTML = html;
     document.getElementById("modal").style.display = "block";
