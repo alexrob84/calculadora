@@ -196,5 +196,15 @@ function limpiarFormulario() {
   document.getElementById('resultado').innerHTML = "";
 }
 
+function formatearNumeroParaWhatsapp(telefono) {
+  let limpio = telefono.replace(/\D/g, ''); // Quita todo lo que no sea número
+
+  if (limpio.startsWith("0")) {
+    limpio = "58" + limpio.slice(1);
+  }
+
+  return limpio;
+}
+
 window.onload = () => mostrarHistorial();
 
