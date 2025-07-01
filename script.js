@@ -148,7 +148,11 @@ function mostrarDetalles(id) {
       <h3>Datos del paciente</h3>
       <p><strong>Nombre:</strong> ${p.nombre}</p>
       <p><strong>Edad:</strong> ${p.edad}</p>
-      <p><strong>Teléfono:</strong> ${p.telefono}</p>
+      <p><strong>Teléfono:</strong> 
+        <a href="https://wa.me/${formatearNumeroParaWhatsapp(p.telefono)}" target="_blank">
+          ${p.telefono}
+        </a>
+      </p>
       <p><strong>Diagnóstico:</strong> ${p.diagnostico}</p>
       <p><strong>Comentarios:</strong> ${p.comentarios}</p>
       <p><strong>Peso:</strong> ${p.peso} kg</p>
