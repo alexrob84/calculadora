@@ -24,6 +24,13 @@ button:hover {
   background-color: #0056b3;
 }
 
+#historial button {
+  font-size: 14px;
+  padding: 6px 8px;
+  margin: 2px;
+  white-space: nowrap;
+}
+
 table {
   border-collapse: collapse;
   width: 100%;
