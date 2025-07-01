@@ -144,25 +144,6 @@ function mostrarDetalles(id) {
     const p = snapshot.val();
     if (!p) return;
 
-    // Texto formateado para compartir por WhatsApp
-    const textoWhatsapp = encodeURIComponent(
-      `📄 *Datos del paciente R-CHOP*\n` +
-      `Nombre: ${p.nombre}\n` +
-      `Edad: ${p.edad}\n` +
-      `Teléfono: ${p.telefono}\n` +
-      `Diagnóstico: ${p.diagnostico}\n` +
-      `Comentarios: ${p.comentarios}\n` +
-      `Peso: ${p.peso} kg\n` +
-      `Estatura: ${p.estatura} cm\n` +
-      `BSA: ${p.bsa} m²\n\n` +
-      `💉 *Dosis R-CHOP:*\n` +
-      `- Rituximab: ${p.dosis?.rituximab} mg\n` +
-      `- Ciclofosfamida: ${p.dosis?.ciclofosfamida} mg\n` +
-      `- Doxorubicina: ${p.dosis?.doxorubicina} mg\n` +
-      `- Vincristina: ${p.dosis?.vincristina} mg\n` +
-      `- Prednisona: ${p.dosis?.prednisona} mg/día x5 días`
-    );
-
     const html = `
       <h3>Datos del paciente</h3>
       <p><strong>Nombre:</strong> ${p.nombre}</p>
@@ -183,9 +164,6 @@ function mostrarDetalles(id) {
       <p><strong>Doxorubicina:</strong> ${p.dosis?.doxorubicina} mg</p>
       <p><strong>Vincristina:</strong> ${p.dosis?.vincristina} mg</p>
       <p><strong>Prednisona:</strong> ${p.dosis?.prednisona} mg/día x5 días</p>
-      <button onclick="window.open('https://wa.me/?text=${textoWhatsapp}', '_blank')">
-        📤 Compartir por WhatsApp
-      </button>
     `;
 
     document.getElementById("modalContenido").innerHTML = html;
