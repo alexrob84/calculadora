@@ -172,9 +172,13 @@ function cerrarModal() {
 }
 
 function eliminarPaciente(id) {
+  const confirmar = confirm("¿Estás seguro de que deseas eliminar este paciente?");
+  if (!confirmar) return;
+
   db.ref("pacientes/" + id).remove().then(() => {
     mostrarHistorial(document.getElementById("busqueda").value);
   });
+}
 }
 
 function filtrarHistorial() {
