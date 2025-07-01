@@ -15,8 +15,8 @@
 <body>
  
   <center>
-  <h2>Calculadora de</h2><br>
-  <h2>Dosis R-CHOP</h2>
+  <h2>Calculadora de<br>
+  Dosis R-CHOP</h2>
   </center>
 
   <div id="mensaje-edicion" class="mensaje-edicion" style="display: none;">
@@ -24,15 +24,15 @@
   </div>
 
   <form id="formulario">
-    <label>Nombre: <input type="text" id="nombre" /></label><br>
-    <label>Edad: <input type="number" id="edad" /></label><br>
+    <label>Nombre: * <input type="text" id="nombre" /></label><br>
+    <label>Edad: * <input type="number" id="edad" /></label><br>
     <label>Teléfono: <input type="text" id="telefono" /></label><br>
-    <label>Diagnóstico: <input type="text" id="diagnostico" /></label><br>
+    <label>Diagnóstico: * <input type="text" id="diagnostico" /></label><br>
     <label>Comentarios:<br>
       <textarea id="comentarios" rows="3" cols="40"></textarea>
     </label><br>
-    <label>Peso (kg): <input type="number" id="peso" /></label><br>
-    <label>Estatura (cm): <input type="number" id="estatura" /></label><br>
+    <label>Peso (kg): * <input type="number" id="peso" /></label><br>
+    <label>Estatura (cm): * <input type="number" id="estatura" /></label><br>
 
     <button type="button" onclick="calcularDosis()">Calcular</button>
     <button type="button" id="btnGuardar" onclick="guardarPaciente()">Guardar en historial</button>
