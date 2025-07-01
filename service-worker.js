@@ -1,5 +1,5 @@
-self.addEventListener("install", e => {
-  e.waitUntil(
+self.addEventListener("install", event => {
+  event.waitUntil(
     caches.open("r-chop-cache").then(cache => {
       return cache.addAll([
         "./",
@@ -14,8 +14,18 @@ self.addEventListener("install", e => {
   );
 });
 
-self.addEventListener("fetch", e => {
-  e.respondWith(
-    caches.match(e.request).then(response => response || fetch(e.request))
+self.addEventListener("fetch", event => {
+  event.respondWith(
+    fetch(event.request)
+      .then(response => {
+        // Actualiza caché con la versión nueva
+        const clone = response.clone();
+        caches.open("r-chop-cache").then(cache => cache.put(event.request, clone));
+        return response;
+      })
+      .catch(() => {
+        // Si no hay conexión, usa lo que haya en caché
+        return caches.match(event.request);
+      })
   );
 });
