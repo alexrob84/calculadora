@@ -15,7 +15,7 @@ input, textarea, button {
 }
 
 button {
-  background-color: #007bff;
+  background-color: #e83e8c;
   color: white;
   border: none;
   border-radius: 4px;
@@ -23,7 +23,7 @@ button {
 }
 
 button:hover {
-  background-color: #0056b3;
+  background-color: #c8236e;
 }
 
 /* Tabla de historial */
