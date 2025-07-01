@@ -121,13 +121,16 @@ function mostrarHistorial(filtro = "") {
     snapshot.forEach(child => {
       const p = child.val();
       if (!p.nombre || (filtro && !p.nombre.toLowerCase().includes(filtro.toLowerCase()))) return;
+
       html += `<tr data-id="${p.id}">
         <td>${p.timestamp || ""}</td>
         <td>${p.nombre || ""}</td>
         <td>
-          <button onclick="mostrarDetalles(${p.id})">Ver detalles</button>
-          <button onclick="editarPaciente(${p.id})">Editar</button>
-          <button onclick="eliminarPaciente(${p.id})">Eliminar</button>
+          <div class="acciones">
+            <button title="Ver detalles" onclick="mostrarDetalles(${p.id})">👁️</button>
+            <button title="Editar paciente" onclick="editarPaciente(${p.id})">✏️</button>
+            <button title="Eliminar paciente" onclick="eliminarPaciente(${p.id})">🗑️</button>
+          </div>
         </td>
       </tr>`;
     });
