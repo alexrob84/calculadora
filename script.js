@@ -47,10 +47,18 @@ function guardarPaciente() {
   const comentarios = document.getElementById('comentarios').value.trim();
   const peso = parseFloat(document.getElementById('peso').value);
   const estatura = parseFloat(document.getElementById('estatura').value);
+
   if (!nombre || !edad || !diagnostico || !peso || !estatura) {
     alert("Completa todos los campos requeridos.");
     return;
   }
+
+  // 📆 Formato de fecha con dos dígitos en el año
+  const fecha = new Date();
+  const dia = fecha.getDate().toString().padStart(2, '0');
+  const mes = (fecha.getMonth() + 1).toString().padStart(2, '0');
+  const añoCorto = fecha.getFullYear().toString().slice(-2);
+  const fechaFormateada = `${dia}/${mes}/${añoCorto}`;
 
   const bsa = 0.007184 * Math.pow(peso, 0.425) * Math.pow(estatura, 0.725);
   const bsaFixed = bsa.toFixed(2);
@@ -64,9 +72,16 @@ function guardarPaciente() {
 
   const id = pacienteEnEdicion || Date.now();
   const paciente = {
-    id, nombre, edad, telefono, diagnostico, comentarios,
-    peso, estatura, bsa: bsaFixed,
-    timestamp: new Date().toLocaleDateString(),
+    id,
+    nombre,
+    edad,
+    telefono,
+    diagnostico,
+    comentarios,
+    peso,
+    estatura,
+    bsa: bsaFixed,
+    timestamp: fechaFormateada,
     dosis
   };
 
