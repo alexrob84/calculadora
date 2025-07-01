@@ -179,7 +179,6 @@ function eliminarPaciente(id) {
     mostrarHistorial(document.getElementById("busqueda").value);
   });
 }
-}
 
 function filtrarHistorial() {
   const filtro = document.getElementById("busqueda").value;
