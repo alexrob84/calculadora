@@ -165,7 +165,7 @@ function mostrarDetalles(id) {
       <p><strong>Vincristina:</strong> ${p.dosis?.vincristina} mg</p>
       <p><strong>Prednisona:</strong> ${p.dosis?.prednisona} mg/día por 5 días</p>
     `;
-    
+
     document.getElementById("modalContenido").innerHTML = html;
     document.getElementById("modal").style.display = "block";
   });
