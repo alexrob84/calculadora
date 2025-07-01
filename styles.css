@@ -68,29 +68,7 @@ th, td {
   margin-bottom: 10px;
 }
 
-/* Acciones en tabla de historial con íconos compactos */
-.acciones {
-  display: flex;
-  justify-content: flex-start;
-  gap: 6px;
-  flex-wrap: nowrap;
-}
 
-.acciones button {
-  font-size: 18px;
-  padding: 4px 6px;
-  border-radius: 4px;
-  background-color: #f0f0f0;
-  border: 1px solid #ccc;
-  cursor: pointer;
-  flex-shrink: 0;
-  min-width: 36px;
-  text-align: center;
-}
-
-.acciones button:hover {
-  background-color: #e2e2e2;
-}
 
 /* Responsive */
 @media (max-width: 600px) {
